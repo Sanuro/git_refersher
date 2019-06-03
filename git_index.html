@@ -4,13 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Just git stuff</title>
-</head>
-<body>
-    <h1>
-        Git reminder/refresher
-    </h1>
+    <title>git vue/vuex</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/vuex"></script>
 
-    <p> use the second add/ commit</p>
+</head>
+
+<body>
+
+    <div id="app">
+        <h1>{{ welcome }}</h1>
+        <h2>{{ message }}</h2>
+
+        <h4>{{ count }}</h4>
+        <button @click="pressed">Increment the counter</button>
+        <h3>{{ lewl }}</h3>
+
+        
+    </div>
+    
+    <script>
+        const store = new Vuex.Store({
+            state: {
+                //define the data for applications and have it be available throught the application\
+                message: '안녕 이재원, hello zue ',
+                count: 0,
+                lewl: 'WADDUP DAWG'
+            },
+            // want to change smth or make it do smth
+            // always synchronous
+            mutations: {
+                increment(state, payload){
+                    state.count+=payload;
+                }
+            },
+            // access the mutations directly with actions and if asynchronous, use actions
+            actions:{
+                increment(state, payload){
+                    state.commit('increment', payload)
+                }
+            },
+            getters:{
+                // one way of retrieving info from the Store
+                // every component gets this from the same place
+                message(state){
+                    return state.message.toUpperCase();
+                },
+                lewl(state){
+                    return state.lewl.toLowerCase();
+                },
+                counter(state){
+                    return state.count;
+                }
+            },
+        });
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                // difference between this data and state? welcome/message
+                welcome: '이재원입니다'
+            }
+        },
+        // can access the information from store without a getter    
+        computed: {
+            // can have same name doesn't matter
+            message(){
+                return store.getters.message;
+            },
+            lewl(){
+                return store.getters.lewl;
+            },
+            count(){
+                return store.getters.counter;
+            }
+        },
+        methods: {
+            pressed(){
+                //calling the name of the mutation
+                //increment is the state and 10 is the payload
+                store.dispatch('increment', 15)
+            }
+        }
+    });
+        </script>
 </body>
 </html>
